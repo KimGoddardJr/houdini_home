@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="auto_blend_keyer" label="Auto Blend Keyer" icon="PLASMA_App">
+    <script scriptType="python"><![CDATA[import hou
+
+not_blend_parms = ['dummy','blend0','voxelblend','nblends','dummy']
+
+blend_parms = []
+
+for node in hou.selectedNodes():
+    if node.type().name() == 'blendshapes::2.0':
+        for parm in node.allParms():
+            if 'blend' in parm.name():
+                blend_parms.append(parm)
+                
+            for name in not_blend_parms:
+                if name == parm.name():
+                    blend_parms.remove(parm)
+            
+
+for p in blend_parms:
+    print p.name()
+#timeline_start = 1
+#timeline_end = range(blend_parms)+1
+
+
+for i, parm in enumerate(blend_parms):
+
+    setKey_max = hou.Keyframe()
+    setKey_max.setValue(1)
+    setKey_max.setFrame(float(i))
+    setKey_min = hou.Keyframe()
+    setKey_min.setValue(0)
+    setKey_min.setFrame(float(i-1))
+    
+    parm.setKeyframes([setKey_min,setKey_max])
+    
+    setKey_min.setFrame(float(i+1))
+    parm.setKeyframe(setKey_min)
+    
+    #null minus out again
+    setKey_min.setFrame(float(i-1))
+    #parm.setKeyframe(setKey_max)        
+
+]]></script>
+  </tool>
+</shelfDocument>
