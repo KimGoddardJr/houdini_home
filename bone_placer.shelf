@@ -35,7 +35,7 @@ for point in mesh_data.iterPoints():
         old_posy -= 1
         new_bone = hou.node(root_node.path()).createNode('bone', node_name='boner_{}'.format(point.number()))
         new_bone.parm('tx').set(point.position()[0])
-        new_bone.parm('ty').set(point.position()[1]-0.5)
+        new_bone.parm('ty').set(point.position()[1])
         new_bone.parm('tz').set(point.position()[2])
         new_bone.parm('rx').set(90)
         new_bone.parm('keeppos').set(True)
