@@ -11,8 +11,17 @@ import uuid
 
 #create empty node group
 root_node = hou.node('/obj').createNode('subnet',node_name='RootNode')
-neck_bone = hou.node(root_node.path()).createNode('bone', node_name='neck_boner')
+neck_bone = hou.node(root_node.path()).createNode('bone', node_name='neck_bone')
 neck_bone.parm('rx').set(90)
+head_bone = hou.node(root_node.path()).createNode('bone', node_name='head_bone')
+head_bone.parm('rx').set(90)
+head_bone.parm('ty').set(8)
+head_bone.parm('keeppos').set(True)
+head_bone.setInput(0,neck_bone)
+
+neck_bone.setPosition([10,5])
+head_bone.setPosition([10,2])
+
 
 #geo of node
 mesh_obj = [node for node in hou.selectedNodes() if node.type().name() == 'geo']
@@ -30,7 +39,7 @@ for point in mesh_data.iterPoints():
         new_bone.parm('tz').set(point.position()[2])
         new_bone.parm('rx').set(90)
         new_bone.parm('keeppos').set(True)
-        new_bone.setInput(0,neck_bone)
+        new_bone.setInput(0,head_bone)
         new_bone.setPosition([old_posx,old_posy])        
 
 
